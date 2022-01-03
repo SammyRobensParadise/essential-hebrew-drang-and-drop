@@ -46,10 +46,10 @@
     return newArr;
   }
 
-  eks = [
-    [0, 'dogCatPig.mp3', 1, '1353', 'Hebrew'],
-    [1, 'dogCatPig.mp3', '1353', ' 2651', 'Hebrew'],
-    [2, 'dogCatPig.mp3', '2751', '3814', 'Hebrew'],
+  audioInfo = [
+    ['0', 'dogCatPig.mp3', 1, 1353, 'Hebrew'],
+    ['1', 'dogCatPig.mp3', 1353, 2651, 'Hebrew'],
+    ['2', 'dogCatPig.mp3', 2751, 3814, 'Hebrew'],
   ];
 
   function addDropElements(randomize) {
@@ -81,6 +81,34 @@
     }
   }
 
+  function playAudio(id) {
+    var trackInfo = {};
+    for (i = 0; i <= audioInfo.length - 1; i++) {
+      if (audioInfo[i][0] === id) {
+        trackInfo.id = id;
+        trackInfo.fileName = audioInfo[i][1];
+        trackInfo.startTime = audioInfo[i][2] / 1000;
+        trackInfo.endTime = audioInfo[i][3] / 1000;
+        trackInfo.lang = audioInfo[i][4];
+      }
+    }
+    const audioFileURL =
+      'https://www.essentialhebrew.com/thekey/allaudio/unit1/' + trackInfo.fileName;
+    const audio = new Audio(audioFileURL);
+    audio.currentTime = trackInfo.startTime;
+    audio.addEventListener(
+      'timeupdate',
+      function () {
+        if (audio.currentTime >= trackInfo.endTime) {
+          audio.pause();
+          audio.currentTime = 0; //jon added
+        }
+      },
+      false,
+    );
+    audio.play();
+  }
+
   $(function () {
     console.log('the webpage is loaded');
     addDragElements(randomizeDragElements);
@@ -107,16 +135,14 @@
         /**
         this function is called when an accepted
         draggable is dropped
-           */
-        // here is where we would play audio
-        var id = drag.target.attributes['data-id'].value;
+        */
+        var id = drag.target.attributes['sound-id'].value;
         console.log(id);
-        // this is where you willl add the link to your audio
-        //    var audio = new //Audio("https://www.kozco.com/tech/LRMonoPhase4.mp3")
-        //   audio.play()
+        playAudio(id);
       },
     });
   });
+
   /*
     var slider = document.getElementById('myRange');
     var outputRate = document.getElementById('playbackSlider');
