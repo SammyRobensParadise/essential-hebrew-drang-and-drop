@@ -92,13 +92,21 @@
     $('.droppable').droppable({
       accept: function (drag) {
         var dropId = $(this).attr('data-id');
+        /**
+        lets say dropId was animal
+        **/
         var dragId = $(drag).attr('data-id');
-        return dropId === dragId;
+        /**
+        lets say dragId was dog-animal
+        use
+        return dragId.includes(dropId)
+        **/
+        return dragId === dropId;
       },
       drop: function (drag) {
         /**
-           this function is called when an accepted
-           draggable is dropped
+        this function is called when an accepted
+        draggable is dropped
            */
         // here is where we would play audio
         var id = drag.target.attributes['data-id'].value;
