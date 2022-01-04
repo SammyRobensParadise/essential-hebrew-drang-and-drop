@@ -45,6 +45,7 @@
     { id: 'distractor2', text: 'אבנים', lang: 'he' },
     { id: 'distractor3', text: 'הזרים', lang: 'he' },
   ];
+
   /**
     elements that are dropped
      **/
@@ -75,7 +76,7 @@
     return newArr;
   }
 
-  audioInfo = [
+  const audioInfo = [
     ['0', 'dragDrop1.mp3', 1, 1353, 'dog'],
     ['1', 'dragDrop1.mp3', 1353, 2409, 'cat'],
     ['2', 'dragDrop1.mp3', 2751, 3814, 'pig'],
@@ -89,6 +90,34 @@
     //['10',audDistractor1,0,1332,"לא נכון"],
     //['11',audDistractor2,0,993,"לא בדיוק"],
     //['12',audDistractor3,0,1632,"נא לְנַסות שוּב"],
+  ];
+
+  /**
+  @TODO
+  you will need to change
+  the file name, and the start and stop times,
+  as well as the Ids to what you want!
+  */
+  const successAudio = [
+    ['0', 'dragDrop1.mp3', 1, 1353, 'correct'],
+    ['1', 'dragDrop1.mp3', 1353, 2409, 'awesome'],
+    ['2', 'dragDrop1.mp3', 2751, 3814, 'yay'],
+    ['3', 'dragDrop1.mp3', 4297, 5422, 'go-you'],
+    ['4', 'dragDrop1.mp3', 5729, 7052, 'horay'],
+  ];
+
+  /**
+  @TODO
+  you will need to change
+  the file name, and the start and stop times,
+  as well as the Ids to what you want!
+  */
+  const incorrectAudio = [
+    ['0', 'dragDrop1.mp3', 1, 1353, 'wrong'],
+    ['1', 'dragDrop1.mp3', 1353, 2409, 'terrible'],
+    ['2', 'dragDrop1.mp3', 2751, 3814, 'you-suck'],
+    ['3', 'dragDrop1.mp3', 4297, 5422, 'gross'],
+    ['4', 'dragDrop1.mp3', 5729, 7052, 'nope'],
   ];
 
   function addDropElements(randomize) {
@@ -128,15 +157,29 @@
     $('#drag-container').empty();
   }
 
-  function playAudio(id) {
+  function getRandomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function playSuccessAudio() {
+    const randomId = getRandomElement(successAudio)[0];
+    playAudio(randomId, successAudio);
+  }
+
+  function playIncorrectAudio() {
+    const randomId = getRandomElement(incorrectAudio)[0];
+    playAudio(randomId, incorrectAudio);
+  }
+
+  function playAudio(id, sourceArray, callback) {
     var trackInfo = {};
-    for (i = 0; i <= audioInfo.length - 1; i++) {
-      if (audioInfo[i][0] === id) {
+    for (i = 0; i <= sourceArray.length - 1; i++) {
+      if (sourceArray[i][0] === id) {
         trackInfo.id = id;
-        trackInfo.fileName = audioInfo[i][1];
-        trackInfo.startTime = audioInfo[i][2] / 1000;
-        trackInfo.endTime = audioInfo[i][3] / 1000;
-        trackInfo.lang = audioInfo[i][4];
+        trackInfo.fileName = sourceArray[i][1];
+        trackInfo.startTime = sourceArray[i][2] / 1000;
+        trackInfo.endTime = sourceArray[i][3] / 1000;
+        trackInfo.lang = sourceArray[i][4];
       }
     }
     const audioFileURL =
@@ -149,6 +192,9 @@
         if (audio.currentTime >= trackInfo.endTime) {
           audio.pause();
           audio.currentTime = 0; //jon added
+          if (typeof callback === 'function') {
+            callback();
+          }
         }
       },
       false,
@@ -157,26 +203,33 @@
   }
 
   $(function () {
-    console.log('the webpage is loaded');
     addDragElements(randomizeDragElements);
     addDropElements(randomizeDropElements);
   });
 
+  function isCorrect(dragId, dropId) {
+    /**
+      lets say dropId was animal
+      lets say dragId was dog-animal
+      then this would also be a match
+    **/
+    return dragId === dropId || dragId.includes(dropId);
+  }
+
   function loadDragAndDrop() {
-    $('.draggable').draggable({ revert: 'invalid' });
+    $('.draggable').draggable({
+      revert: function (isvalid) {
+        if (!isvalid) {
+          playIncorrectAudio();
+          return true;
+        }
+      },
+    });
     $('.droppable').droppable({
       accept: function (drag) {
         var dropId = $(this).attr('data-id');
-        /**
-        lets say dropId was animal
-        **/
         var dragId = $(drag).attr('data-id');
-        /**
-        lets say dragId was dog-animal
-        use
-        return dragId.includes(dropId)
-        **/
-        return dragId === dropId;
+        return isCorrect(dragId, dropId);
       },
       drop: function (drag) {
         /**
@@ -184,8 +237,7 @@
         draggable is dropped
         */
         var id = drag.target.attributes['sound-id'].value;
-        console.log(id);
-        playAudio(id);
+        playAudio(id, audioInfo, playSuccessAudio);
       },
     });
   }
