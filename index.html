@@ -3,6 +3,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.0.0-beta.12/draggable.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js"></script>
+  <meta charset="UTF-8" />
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"></script> -->
 </head>
 <script>
   const dogImage =
@@ -17,9 +20,9 @@
   const catsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/cats.jpg';
   const dogsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/dogs.jpg';
   const birdsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/birds.jpg';
-  const audDistractor1 = 'https://essentialhebrew.com/thekey/allaudio/lonaxon.mp3';
-  const audDistractor2 = 'https://essentialhebrew.com/thekey/allaudio/lobdiyuk.mp3';
-  const audDistractor3 = 'https://essentialhebrew.com/thekey/allaudio/lnsotshv.mp3';
+  // const audDistractor1 = 'https://essentialhebrew.com/thekey/allaudio/lonaxon.mp3';
+  // const audDistractor2 = 'https://essentialhebrew.com/thekey/allaudio/lobdiyuk.mp3';
+  // const audDistractor3 = 'https://essentialhebrew.com/thekey/allaudio/lnsotshv.mp3';
 
   const audioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/unit1/';
   const successIncorrectAudioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/';
@@ -100,11 +103,12 @@
   as well as the Ids to what you want!
   */
   const successAudio = [
-    ['0', 'correctResponses.mp3', 1, 1353, 'correct'],
-    ['1', 'correctResponses.mp3', 1353, 2409, 'awesome'],
-    ['2', 'correctResponses.mp3', 2751, 3814, 'yay'],
-    ['3', 'correctResponses', 4297, 5422, 'go-you'],
-    ['4', 'correctResponses', 5729, 7052, 'horay'],
+    ['0', 'correctResponses.mp3', 1, 689, 'נכון'],
+    ['1', 'correctResponses.mp3', 1325, 2551, 'מצויין'],
+    ['2', 'correctResponses.mp3', 2918, 4305, 'מְעוּלֶה'],
+    ['3', 'correctResponses.mp3', 5254, 6803, 'נכון מאוד'],
+    ['4', 'correctResponses.mp3', 7286, 8575, 'נהדר'],
+    ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
   ];
 
   /**
@@ -113,11 +117,12 @@
   as well as the Ids to what you want!
   */
   const incorrectAudio = [
-    ['0', 'error_response.mp3', 1, 1353, 'wrong'],
-    ['1', 'error_response.mp3', 1353, 2409, 'terrible'],
-    ['2', 'error_response.mp3', 2751, 3814, 'you-suck'],
-    ['3', 'error_response.mp3', 4297, 5422, 'gross'],
-    ['4', 'error_response.mp3', 5729, 7052, 'nope'],
+    ['0', 'wrongResponse.wav', 61, 2562, 'שיעורי בית'],
+    ['1', 'wrongResponse.wav', 2562, 4163, 'לא בדיוק'],
+    ['2', 'wrongResponse.wav', 4084, 5886, 'לא נכון'],
+    ['3', 'wrongResponse.wav', 5886, 9191, 'לא נכון בבקשה'],
+    ['4', 'wrongResponse.wav', 9223, 10914, 'נא לנסות שוב'],
+    // ['5', 'wrongResponse.wav', 16874, 19492, 'לא בדיוק'],
   ];
 
   function addDropElements(randomize) {
@@ -252,85 +257,6 @@
     addDropElements(randomizeDropElements);
     loadDragAndDrop();
   }
-
-  /*
-    var slider = document.getElementById('myRange');
-    var outputRate = document.getElementById('playbackSlider');
-    outputRate.innerHTML = slider.value;
-    slider.oninput = function () {
-      var x = document.getElementById('audio' + currentAudioPlaying);
-      //  var temp = x.playbackRate;
-      x.playbackRate = this.value / 100;
-      if (x.playbackRate < 0.75) {
-        x.playbackRate = 0.75;
-      }
-      outputRate.innerHTML = this.value;
-      temp = this.value;
-    };
-    var temp = slider.value;
-    //these variables are for function Entry
-    var audioPlaying = 0;
-    var currentAudioID = null;
-    var previousAudioID = null;
-    function Entry(i) {
-      currentAudioID = i;
-      if (audioPlaying == 0) {
-        previousAudioID = currentAudioID;
-        playAudio(i);
-      } else if (audioPlaying == 1 && currentAudioID == previousAudioID) {
-        w = document.getElementById('audio' + previousAudioID);
-        w.pause();
-        audioPlaying = 0;
-        w.currentTime = 0;
-        previousAudioID = null;
-      } //you click on a different audio while the audio that you previously clicked is still playing i.e. = 1
-      else {
-        w = document.getElementById('audio' + previousAudioID);
-        w.pause();
-        audioPlaying = 0;
-        w.currentTime = 0;
-        previousAudioID = null;
-        Entry(i);
-      }
-    }
-    function playAudio(i) {
-      // set global tag to the current player tag
-      currentAudioPlaying = i;
-      // a = the audio tag to play
-      // i = the array index
-      var x = document.getElementById('audio' + i);
-      var starttime = eks1[i][2] / 1000;
-      var endtime = eks1[i][3] / 1000;
-      if (x.controls == false) {
-        x.controls = false;
-        x.addEventListener(
-          'timeupdate',
-          function () {
-            if (x.currentTime >= endtime) {
-              x.pause();
-              x.currentTime = 0; //jon added
-              audioPlaying = 0;
-            }
-          },
-          false,
-        );
-        //suppose that video src has been already set properly
-        x.load();
-        x.playbackRate = temp / 100;
-        x.play(); //must call this otherwise can't seek on some browsers, e.g. Firefox 4
-        audioPlaying = 1;
-        currentAudioID = i;
-        try {
-          x.currentTime = starttime;
-        } catch (ex) {
-          //handle exceptions here
-        }
-      } else {
-        x.pause();
-        x.currentTime = 0;
-        x.controls = false;
-      }
-    } */
 </script>
 <!--Enter HTML Code-->
 <style type="text/css">
