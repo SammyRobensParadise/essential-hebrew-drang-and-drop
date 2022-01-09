@@ -133,16 +133,16 @@
   **/
   var remainingWords = [];
 
+  const scoreIncrementValue = 2;
+
   /**
   total possible score
   **/
   const totalPossibleScore = audioInfo.filter(function (element) {
     return element[5] === true
-  }).length
+  }).length * scoreIncrementValue
 
-  debugger
   var score = 0;
-  const scoreIncrementValue = 2;
   const scoreDecrementValue = {
     easy: 0,
     medium: 1,
@@ -237,7 +237,7 @@
   function playCompleteAudio() {
     if (remainingWords.length === 0) {
       const randomId = getRandomElement(completeAudio)[0];
-      window.alert('You Won!');
+      window.alert("Congratulations, you completed the challenge!");
       playAudio(globalAudioFileLocation, randomId, completeAudio);
     }
   }
@@ -305,7 +305,7 @@
   function loadDragAndDrop() {
     score = 0;
     updateScore('reset');
-    $("#total-score").empty().value(totalPossibleScore)
+    $("#total-score").append(totalPossibleScore)
     remainingWords = JSON.parse(JSON.stringify(audioInfo));
     $('.draggable').draggable({
       revert: function (isvalid) {
@@ -511,10 +511,13 @@
   }
 
   #score-container p {
-    margin-left: 10px;
-    margin-right: 10px;
     font-size: 18px;
     font-weight: bold;
+  }
+
+  #score-container .label {
+    padding-right: 20px;
+    padding-left: 20px;
   }
 
   .level {
@@ -554,9 +557,10 @@
         <label for="hard">Hard (Loose 2 for incorrect answers)</label><br>
     </div>
     <div id="score-container">
-      <p>Score:</p>
+      <p class="label">Score:</p>
       <p id="score"></p>
-      <p>/<div id="total-score"></div></p>
+      <p>/</p>
+      <p id="total-score"></p>
     </div>
   </div>
   <div class="wrapper">
