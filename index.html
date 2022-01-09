@@ -21,6 +21,8 @@
   const audDistractor2 = 'https://essentialhebrew.com/thekey/allaudio/lobdiyuk.mp3';
   const audDistractor3 = 'https://essentialhebrew.com/thekey/allaudio/lnsotshv.mp3';
 
+  const audioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/unit1/';
+  const successIncorrectAudioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/';
   const randomizeDropElements = true;
   const randomizeDragElements = true;
   /**
@@ -94,30 +96,28 @@
 
   /**
   @TODO
-  you will need to change
-  the file name, and the start and stop times,
+  you will need to change the start and stop times,
   as well as the Ids to what you want!
   */
   const successAudio = [
-    ['0', 'dragDrop1.mp3', 1, 1353, 'correct'],
-    ['1', 'dragDrop1.mp3', 1353, 2409, 'awesome'],
-    ['2', 'dragDrop1.mp3', 2751, 3814, 'yay'],
-    ['3', 'dragDrop1.mp3', 4297, 5422, 'go-you'],
-    ['4', 'dragDrop1.mp3', 5729, 7052, 'horay'],
+    ['0', 'correctResponses.mp3', 1, 1353, 'correct'],
+    ['1', 'correctResponses.mp3', 1353, 2409, 'awesome'],
+    ['2', 'correctResponses.mp3', 2751, 3814, 'yay'],
+    ['3', 'correctResponses', 4297, 5422, 'go-you'],
+    ['4', 'correctResponses', 5729, 7052, 'horay'],
   ];
 
   /**
   @TODO
-  you will need to change
-  the file name, and the start and stop times,
+  you will need to change the start and stop times,
   as well as the Ids to what you want!
   */
   const incorrectAudio = [
-    ['0', 'dragDrop1.mp3', 1, 1353, 'wrong'],
-    ['1', 'dragDrop1.mp3', 1353, 2409, 'terrible'],
-    ['2', 'dragDrop1.mp3', 2751, 3814, 'you-suck'],
-    ['3', 'dragDrop1.mp3', 4297, 5422, 'gross'],
-    ['4', 'dragDrop1.mp3', 5729, 7052, 'nope'],
+    ['0', 'error_response.mp3', 1, 1353, 'wrong'],
+    ['1', 'error_response.mp3', 1353, 2409, 'terrible'],
+    ['2', 'error_response.mp3', 2751, 3814, 'you-suck'],
+    ['3', 'error_response.mp3', 4297, 5422, 'gross'],
+    ['4', 'error_response.mp3', 5729, 7052, 'nope'],
   ];
 
   function addDropElements(randomize) {
@@ -163,15 +163,15 @@
 
   function playSuccessAudio() {
     const randomId = getRandomElement(successAudio)[0];
-    playAudio(randomId, successAudio);
+    playAudio(successIncorrectAudioLocation, randomId, successAudio);
   }
 
   function playIncorrectAudio() {
     const randomId = getRandomElement(incorrectAudio)[0];
-    playAudio(randomId, incorrectAudio);
+    playAudio(successIncorrectAudioLocation, randomId, incorrectAudio);
   }
 
-  function playAudio(id, sourceArray, callback) {
+  function playAudio(location, id, sourceArray, callback) {
     var trackInfo = {};
     for (i = 0; i <= sourceArray.length - 1; i++) {
       if (sourceArray[i][0] === id) {
@@ -182,8 +182,7 @@
         trackInfo.lang = sourceArray[i][4];
       }
     }
-    const audioFileURL =
-      'https://www.essentialhebrew.com/thekey/allaudio/unit1/' + trackInfo.fileName;
+    const audioFileURL = location + trackInfo.fileName;
     const audio = new Audio(audioFileURL);
     audio.currentTime = trackInfo.startTime;
     audio.addEventListener(
@@ -237,7 +236,7 @@
         draggable is dropped
         */
         var id = drag.target.attributes['sound-id'].value;
-        playAudio(id, audioInfo, playSuccessAudio);
+        playAudio(audioLocation, id, audioInfo, playSuccessAudio);
       },
     });
   }
