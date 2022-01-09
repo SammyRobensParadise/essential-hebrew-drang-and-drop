@@ -25,7 +25,7 @@
   // const audDistractor3 = 'https://essentialhebrew.com/thekey/allaudio/lnsotshv.mp3';
 
   const audioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/unit1/';
-  const successIncorrectAudioLocation = 'https://www.essentialhebrew.com/thekey/allaudio/';
+  const globalAudioFileLocation = 'https://www.essentialhebrew.com/thekey/allaudio/';
   const randomizeDropElements = true;
   const randomizeDragElements = true;
   /**
@@ -81,27 +81,26 @@
     return newArr;
   }
 
+  /**
+  mark the last element of the array as `true`
+  if it is not an audio distractor
+  */
   const audioInfo = [
-    ['0', 'dragDrop1.mp3', 1, 1353, 'dog'],
-    ['1', 'dragDrop1.mp3', 1353, 2409, 'cat'],
-    ['2', 'dragDrop1.mp3', 2751, 3814, 'pig'],
-    ['3', 'dragDrop1.mp3', 4297, 5422, 'horse'],
-    ['4', 'dragDrop1.mp3', 5729, 7052, 'bird'],
-    ['5', 'dragDrop1.mp3', 7408, 8563, 'fish'],
-    ['6', 'dragDrop1.mp3', 9077, 10480, 'nuts'],
-    ['7', 'dragDrop1.mp3', 10993, 12425, 'cats'],
-    ['8', 'dragDrop1.mp3', 12532, 13865, 'dogs'],
-    ['9', 'dragDrop1.mp3', 14116, 15548, 'birds'],
-    //['10',audDistractor1,0,1332,"לא נכון"],
-    //['11',audDistractor2,0,993,"לא בדיוק"],
-    //['12',audDistractor3,0,1632,"נא לְנַסות שוּב"],
+    ['0', 'dragDrop1.mp3', 1, 1353, 'dog', true],
+    ['1', 'dragDrop1.mp3', 1353, 2409, 'cat', true],
+    ['2', 'dragDrop1.mp3', 2751, 3814, 'pig', true],
+    ['3', 'dragDrop1.mp3', 4297, 5422, 'horse', true],
+    ['4', 'dragDrop1.mp3', 5729, 7052, 'bird', true],
+    ['5', 'dragDrop1.mp3', 7408, 8563, 'fish', true],
+    ['6', 'dragDrop1.mp3', 9077, 10480, 'nuts', true],
+    ['7', 'dragDrop1.mp3', 10993, 12425, 'cats', true],
+    ['8', 'dragDrop1.mp3', 12532, 13865, 'dogs', true],
+    ['9', 'dragDrop1.mp3', 14116, 15548, 'birds', true],
+    //['10',audDistractor1,0,1332,"לא נכון", false],
+    //['11',audDistractor2,0,993,"לא בדיוק", false],
+    //['12',audDistractor3,0,1632,"נא לְנַסות שוּב", false],
   ];
 
-  /**
-  @TODO
-  you will need to change the start and stop times,
-  as well as the Ids to what you want!
-  */
   const successAudio = [
     ['0', 'correctResponses.mp3', 1, 689, 'נכון'],
     ['1', 'correctResponses.mp3', 1325, 2551, 'מצויין'],
@@ -111,11 +110,6 @@
     ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
   ];
 
-  /**
-  @TODO
-  you will need to change the start and stop times,
-  as well as the Ids to what you want!
-  */
   const incorrectAudio = [
     ['0', 'wrongResponse.wav', 61, 2562, 'שיעורי בית'],
     ['1', 'wrongResponse.wav', 2562, 4163, 'לא בדיוק'],
@@ -124,6 +118,69 @@
     ['4', 'wrongResponse.wav', 9223, 10914, 'נא לנסות שוב'],
     // ['5', 'wrongResponse.wav', 16874, 19492, 'לא בדיוק'],
   ];
+
+  const completeAudio = [
+    ['0', 'correctResponses.mp3', 1, 689, 'נכון'],
+    ['1', 'correctResponses.mp3', 1325, 2551, 'מצויין'],
+    ['2', 'correctResponses.mp3', 2918, 4305, 'מְעוּלֶה'],
+    ['3', 'correctResponses.mp3', 5254, 6803, 'נכון מאוד'],
+    ['4', 'correctResponses.mp3', 7286, 8575, 'נהדר'],
+    ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
+  ];
+
+  /**
+  Keep track of words that have been marked as correct
+  **/
+  var remainingWords = [];
+
+  /**
+  total possible score
+  **/
+  const totalPossibleScore = audioInfo.filter(function (element) {
+    return element[5] === true
+  }).length
+
+  debugger
+  var score = 0;
+  const scoreIncrementValue = 2;
+  const scoreDecrementValue = {
+    easy: 0,
+    medium: 1,
+    hard: 2,
+  };
+  var chosenDecrement = scoreDecrementValue.easy;
+
+  function updateScore(action) {
+    if (action === 'reset') {
+      score = 0;
+    }
+    if (action === 'increment') {
+      score += scoreIncrementValue;
+    }
+    if (action === 'decrement') {
+      if (score !== 0) {
+        score -= chosenDecrement;
+      }
+    }
+
+    $('#score').empty().append(score);
+  }
+
+  $(function () {
+    $("#level-select").change(function (evennt) {
+      event.preventDefault()
+      const selected = event.target.value;
+      if (selected === "easy") {
+        chosenDecrement = scoreDecrementValue.easy
+      }
+      if (selected === "medium") {
+        chosenDecrement = scoreDecrementValue.medium
+      }
+      if (selected === "hard") {
+        chosenDecrement = scoreDecrementValue.hard
+      }
+    })
+  })
 
   function addDropElements(randomize) {
     const elementsToRender = randomize ? getShuffledArr(dropElements) : dropElements;
@@ -166,14 +223,39 @@
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  function playSuccessAudio() {
-    const randomId = getRandomElement(successAudio)[0];
-    playAudio(successIncorrectAudioLocation, randomId, successAudio);
+  function removeElementById(id, sourceArray) {
+    for (var i = 0; i < sourceArray.length; i++) {
+      if (sourceArray[i][0] === id && sourceArray[i][5]) {
+        sourceArray = sourceArray.splice(i, 1);
+      }
+    }
   }
 
+  /**
+  called when there are no more words to drag
+  */
+  function playCompleteAudio() {
+    if (remainingWords.length === 0) {
+      const randomId = getRandomElement(completeAudio)[0];
+      window.alert('You Won!');
+      playAudio(globalAudioFileLocation, randomId, completeAudio);
+    }
+  }
+
+  /**
+  called on correct word drop
+  */
+  function playSuccessAudio(callback) {
+    const randomId = getRandomElement(successAudio)[0];
+    playAudio(globalAudioFileLocation, randomId, successAudio, callback);
+  }
+
+  /**
+  called on incorrect word drop
+  */
   function playIncorrectAudio() {
     const randomId = getRandomElement(incorrectAudio)[0];
-    playAudio(successIncorrectAudioLocation, randomId, incorrectAudio);
+    playAudio(globalAudioFileLocation, randomId, incorrectAudio);
   }
 
   function playAudio(location, id, sourceArray, callback) {
@@ -221,9 +303,14 @@
   }
 
   function loadDragAndDrop() {
+    score = 0;
+    updateScore('reset');
+    $("#total-score").empty().value(totalPossibleScore)
+    remainingWords = JSON.parse(JSON.stringify(audioInfo));
     $('.draggable').draggable({
       revert: function (isvalid) {
         if (!isvalid) {
+          updateScore('decrement');
           playIncorrectAudio();
           return true;
         }
@@ -241,7 +328,12 @@
         draggable is dropped
         */
         var id = drag.target.attributes['sound-id'].value;
-        playAudio(audioLocation, id, audioInfo, playSuccessAudio);
+        removeElementById(id, remainingWords);
+        updateScore('increment');
+        function success() {
+          playSuccessAudio(playCompleteAudio);
+        }
+        playAudio(audioLocation, id, audioInfo, success);
       },
     });
   }
@@ -268,6 +360,7 @@
     border-radius: 4px;
     background: white;
   }
+
   .draggable {
     height: 25px;
     color: green;
@@ -280,12 +373,14 @@
     border-radius: 5px;
     margin-left: 90px;
     margin-bottom: 8px;
-    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: move;
+    /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
     border-style: solid;
   }
+
   .draggable:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
@@ -304,6 +399,7 @@
     padding: 5pt;
     border-radius: 5px;
   }
+
   .slider {
     -webkit-appearance: none;
     /* width: 65%; */
@@ -316,9 +412,11 @@
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
   }
+
   .slider:hover {
     opacity: 1;
   }
+
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -328,6 +426,7 @@
     background: #110109;
     cursor: pointer;
   }
+
   .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
@@ -335,6 +434,7 @@
     background: #110109;
     cursor: pointer;
   }
+
   .mybtn {
     height: 24px;
     width: 43;
@@ -347,6 +447,7 @@
     border-radius: 3pt;
     vertical-align: top;
   }
+
   .wrapper {
     display: flex;
     width: 100%;
@@ -357,11 +458,13 @@
     height: 110%;
     padding: 10px;
   }
+
   .drag {
     background: whitesmoke;
     width: 50%;
   }
-  .drag > .draggable {
+
+  .drag>.draggable {
     display: inline-flex;
     margin: 10px;
   }
@@ -375,9 +478,11 @@
     text-align: center;
     color: rgb(100, 100, 100);
   }
+
   body {
     background-color: lightgray;
   }
+
   .repeat-btn {
     border-radius: 4px;
     height: 32px;
@@ -389,9 +494,44 @@
     margin: 10px;
     cursor: pointer;
   }
+
   .repeat-btn:hover,
   .repeat-btn:active {
     background: rgb(19, 19, 255);
+  }
+
+  .header {
+    text-align: center;
+    display: flex;
+  }
+
+  #score-container {
+    float: right;
+    display: flex;
+  }
+
+  #score-container p {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .level {
+    margin-left: 20px;
+    display: flex;
+    font-size: 18px;
+  }
+
+  .level input {
+    margin-top: 24px;
+  }
+
+  .level label {
+    margin-top: 18px;
+    padding-left: 10px;
+    padding-right: 10px;
+
   }
 </style>
 
@@ -401,8 +541,23 @@
       Drag the Hebrew word to the picture that it matches.
     </p>
   </div>
-  <div style="text-align: center">
+  <div class="header">
     <button type="button" class="repeat-btn" onclick="repeat()">Click to Repeat the Game!</button>
+    <div class="level">
+      <form class="level" id="level-select">
+        <p>Select Level:</p>
+        <input type="radio" id="easy" name="level" value="easy" checked>
+        <label for="easy">Easy (Loose 0 for incorrect answers)</label><br>
+        <input type="radio" id="medium" name="level" value="medium">
+        <label for="medium">Medium (Loose 1 for incorrect answers)</label><br>
+        <input type="radio" id="hard" name="level" value="hard">
+        <label for="hard">Hard (Loose 2 for incorrect answers)</label><br>
+    </div>
+    <div id="score-container">
+      <p>Score:</p>
+      <p id="score"></p>
+      <p>/<div id="total-score"></div></p>
+    </div>
   </div>
   <div class="wrapper">
     <div class="container drag" id="drag-container">
