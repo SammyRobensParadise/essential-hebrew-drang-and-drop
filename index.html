@@ -1,8 +1,11 @@
+<!--here is the path to the score numbers audio:  https://www.essentialhebrew.com/thekey/allaudio/numbersAll_noMinus.mp3-->
 <head>
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.0.0-beta.12/draggable.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js"></script>
+  
+
   <meta charset="UTF-8" />
   <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
   crossorigin="anonymous"></script> -->
@@ -17,7 +20,7 @@
   const birdImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/bird.jpg';
   const fishImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/fish.jpg';
   const nutsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/nuts.jpg';
-  const catsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/cats.jpg';
+  const catsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/cats2.jpg';
   const dogsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/dogs.jpg';
   const birdsImage = 'https://essentialhebrew.com/thekey/imageskmh/unit1/birds.jpg';
   // const audDistractor1 = 'https://essentialhebrew.com/thekey/allaudio/lonaxon.mp3';
@@ -127,6 +130,7 @@
     ['4', 'correctResponses.mp3', 7286, 8575, 'נהדר'],
     ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
   ];
+ const scores=[[0, "numbersAll_noMinus.mp3",0, "1305", "Hebrew"],[1, "numbersAll_noMinus.mp3", 1201, "2699", "Hebrew"], [2, "numbersAll_noMinus.mp3", "2699", "4266", "Hebrew"], [3, "numbersAll_noMinus.mp3", "4266", 5390, "Hebrew"], [4, "numbersAll_noMinus.mp3", 5190, "6633", "Hebrew"], [5, "numbersAll_noMinus.mp3", "6633", "8031", "Hebrew"], [6, "numbersAll_noMinus.mp3", 8331, "10157", "Hebrew"], [7, "numbersAll_noMinus.mp3", 11057, "12675", "Hebrew"], [8, "numbersAll_noMinus.mp3", 12975, "14941", "Hebrew"], [9, "numbersAll_noMinus.mp3", 16141, "17658", "Hebrew"], [10, "numbersAll_noMinus.mp3", "17658", "19828", "Hebrew"], [11, "numbersAll_noMinus.mp3", "19828", "22763", "Hebrew"], [12, "numbersAll_noMinus.mp3", "22763", "24928", "Hebrew"], [13, "numbersAll_noMinus.mp3", "24928", "27973", "Hebrew"], [14, "numbersAll_noMinus.mp3", "27973", "29918", "Hebrew"], [15, "numbersAll_noMinus.mp3", "29918", "32791", "Hebrew"], [16, "numbersAll_noMinus.mp3", 33691, "36056", "Hebrew"], [17, "numbersAll_noMinus.mp3", "36056", "38857", "Hebrew"], [18, "numbersAll_noMinus.mp3", "38857", "41636", "Hebrew"], [19, "numbersAll_noMinus.mp3", "41636", "43962", "Hebrew"], [20, "numbersAll_noMinus.mp3", "43962", "46680", "Hebrew"], [21, "numbersAll_noMinus.mp3", 47880, "50260", "Hebrew"], [22, "numbersAll_noMinus.mp3", "50260", "53548", "Hebrew"], [23, "numbersAll_noMinus.mp3", "53548", "56500", "Hebrew"], [24, "numbersAll_noMinus.mp3", "56500", "59439", "Hebrew"], [25, "numbersAll_noMinus.mp3", "59439", "61741", "Hebrew"], [26, "numbersAll_noMinus.mp3", "61741", "63843", "Hebrew"], [27, "numbersAll_noMinus.mp3", "63843", "65731", "Hebrew"], [28, "numbersAll_noMinus.mp3", "65731", "67592", "Hebrew"], [29, "numbersAll_noMinus.mp3", "67592", "69526", "Hebrew"], [30, "numbersAll_noMinus.mp3", "69526", "71215", "Hebrew"], [31, "numbersAll_noMinus.mp3", "71215", 72787, "Hebrew"], [32, "numbersAll_noMinus.mp3", 72887, "74253", "Hebrew"], [33, "numbersAll_noMinus.mp3", "74253", "75732", "Hebrew"], [34, "numbersAll_noMinus.mp3", "75732", 77591, "Hebrew"], [35, "numbersAll_noMinus.mp3", "77791", "79329", "Hebrew"], [36, "numbersAll_noMinus.mp3", "79329", "81232", "Hebrew"], [37, "numbersAll_noMinus.mp3", "81232", "83044", "Hebrew"], [38, "numbersAll_noMinus.mp3", "83044", "85177", "Hebrew"], [39, "numbersAll_noMinus.mp3", "85177", "86766", "Hebrew"], [40, "numbersAll_noMinus.mp3", "86766", "88373", "Hebrew"]];
 
   /**
   Keep track of words that have been marked as correct
@@ -184,7 +188,6 @@
 
   function addDropElements(randomize) {
     const elementsToRender = randomize ? getShuffledArr(dropElements) : dropElements;
-    // debugger;
     for (var i = 0; i <= elementsToRender.length - 1; i++) {
       $('#drop-container').append(
         $('<img>')
@@ -200,7 +203,6 @@
 
   function addDragElements(randomize) {
     const elementsToRender = randomize ? getShuffledArr(dragElements) : dragElements;
-    // debugger;
     for (var i = 0; i <= elementsToRender.length - 1; i++) {
       $('#drag-container').append(
         $('<div>')
@@ -237,11 +239,15 @@
   function playCompleteAudio() {
     if (remainingWords.length === 0) {
       const randomId = getRandomElement(completeAudio)[0];
-      window.alert("Congratulations, you completed the challenge!");
+     finished("you have finished")
+     // window.alert("Congratulations, you completed the challenge!");
       playAudio(globalAudioFileLocation, randomId, completeAudio);
     }
   }
-
+  
+  function finished(){
+ 
+    }
   /**
   called on correct word drop
   */
@@ -315,7 +321,7 @@
           return true;
         }
       },
-    });
+    })
     $('.droppable').droppable({
       accept: function (drag) {
         var dropId = $(this).attr('data-id');
@@ -349,12 +355,17 @@
     addDropElements(randomizeDropElements);
     loadDragAndDrop();
   }
+  function finished(){
+ document.getElementById("greeting").innerHTML ="You have finished. You matched all the words"
+    }
 </script>
 <!--Enter HTML Code-->
 <style type="text/css">
   .droppable {
     width: 100px;
+    /* width:200px; */
     height: 100px;
+    /* height:112px; */
     margin: 10px;
     border: 1px solid rgb(53, 53, 53);
     border-radius: 4px;
@@ -485,7 +496,7 @@
 
   .repeat-btn {
     border-radius: 4px;
-    height: 32px;
+    height: 40px;
     border: none;
     padding: 10px;
     font-size: 12px;
@@ -519,6 +530,11 @@
     padding-right: 20px;
     padding-left: 20px;
   }
+  #finished
+ {
+position:absolute;
+
+ }
 
   .level {
     margin-left: 20px;
