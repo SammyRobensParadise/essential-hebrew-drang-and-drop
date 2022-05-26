@@ -5,7 +5,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
   <script src="./jquery.touch.js"></script>
-
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+  <style>
+    /* override styles here */
+    .notie-container {
+      box-shadow: none;
+    }
+  </style>
+  <script src="https://unpkg.com/notie"></script>
 
   <meta charset="UTF-8" />
 </head>
@@ -166,9 +173,12 @@
       score = 0
     }
     if (action === 'increment') {
+      notie.alert({ text: 'נכון', type: "success" })
       score += scoreIncrementValue
     }
     if (action === 'decrement') {
+      notie.alert({ text: 'לא נכון', type: "error" })
+
       if (score !== 0) {
         score -= chosenDecrement
       }
