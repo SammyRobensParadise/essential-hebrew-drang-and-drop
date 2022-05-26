@@ -328,15 +328,7 @@
           return true
         }
       },
-    }).touch({
-      animate: false,
-      sticky: false,
-      dragx: true,
-      dragy: true,
-      rotate: false,
-      resort: true,
-      scale: false
-    })
+    }).touch()
     $('.droppable').droppable({
       accept: function (drag) {
         var dropId = $(this).attr('data-id')
@@ -356,7 +348,7 @@
         }
         playAudio(audioLocation, id, audioInfo, success)
       },
-    })
+    }).touch()
   }
 
   $(function () {
