@@ -134,17 +134,31 @@
     ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
   ]
 
+  const allNumbersAudio = 'https://www.essentialhebrew.com/thekey/allaudio/numbersAll_noMinus.mp3'
 
-  function getNumberAudiofileUrl(number) {
-    const isOdd = number % 2 !== 0
-    const isOutsideBounds = number < 2 || number > 60
-
-    if (isEven || isOutsideBounds) {
-      throw new Error("Invalid Number. Audio file may not exist")
-      return null
-    }
-    return "https://www.essentialhebrew.com/thekey/allaudio/Numbers/" + number.toString() + ".mp3"
-  }
+  const allNumbersTimestamps = [
+    ["0", 1, 20],
+    ["1", 1, 20],
+    ["2", 1, 20],
+    ["3", 1, 20],
+    ["4", 1, 20],
+    ["5", 1, 20],
+    ["6", 1, 20],
+    ["7", 1, 20],
+    ["8", 1, 20],
+    ["9", 1, 20],
+    ["10", 1, 20],
+    ["11", 1, 20],
+    ["12", 1, 20],
+    ["13", 1, 20],
+    ["14", 1, 20],
+    ["15", 1, 20],
+    ["16", 1, 20],
+    ["17", 1, 20],
+    ["18", 1, 20],
+    ["19", 1, 20],
+    ["20", 1, 20]
+  ]
 
   /**
   Keep track of words that have been marked as correct
@@ -561,14 +575,11 @@
     font-size: 18px;
   }
 
-  .level input {
-    margin-top: 24px;
-  }
 
   .level label {
-    margin-top: 18px;
     padding-left: 2px;
     padding-right: 10px;
+    line-height: 56px;
 
   }
 
