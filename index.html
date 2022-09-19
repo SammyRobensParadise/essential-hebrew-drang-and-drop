@@ -134,31 +134,9 @@
     ['5', 'correctResponses.mp3', 7286, 8575, 'טוב מאוד'],
   ]
 
-  const allNumbersAudio = 'https://www.essentialhebrew.com/thekey/allaudio/numbersAll_noMinus.mp3'
+  const allNumbersAudio = 'https://www.essentialhebrew.com/thekey/allaudio/'
 
-  const allNumbersTimestamps = [
-    ["0", 1, 10],
-    ["1", 1, 10],
-    ["2", 1, 10],
-    ["3", 1, 10],
-    ["4", 1, 10],
-    ["5", 1, 10],
-    ["6", 1, 10],
-    ["7", 1, 10],
-    ["8", 1, 10],
-    ["9", 1, 10],
-    ["10", 1, 10],
-    ["11", 1, 10],
-    ["12", 1, 10],
-    ["13", 1, 10],
-    ["14", 1, 10],
-    ["15", 1, 10],
-    ["16", 1, 10],
-    ["17", 1, 10],
-    ["18", 1, 10],
-    ["19", 1, 10],
-    ["20", 1, 10]
-  ]
+  const scores = [[0, "numbersAll_noMinus.mp3", 0, "1305", "Hebrew"], [1, "numbersAll_noMinus.mp3", 1201, "2699", "Hebrew"], [2, "numbersAll_noMinus.mp3", "2699", "4266", "Hebrew"], [3, "numbersAll_noMinus.mp3", "4266", 5390, "Hebrew"], [4, "numbersAll_noMinus.mp3", 5190, "6633", "Hebrew"], [5, "numbersAll_noMinus.mp3", "6633", "8031", "Hebrew"], [6, "numbersAll_noMinus.mp3", 8331, "10157", "Hebrew"], [7, "numbersAll_noMinus.mp3", 11057, "12675", "Hebrew"], [8, "numbersAll_noMinus.mp3", 12975, "14941", "Hebrew"], [9, "numbersAll_noMinus.mp3", 16141, "17658", "Hebrew"], [10, "numbersAll_noMinus.mp3", "17658", "19828", "Hebrew"], [11, "numbersAll_noMinus.mp3", "19828", "22763", "Hebrew"], [12, "numbersAll_noMinus.mp3", "22763", "24928", "Hebrew"], [13, "numbersAll_noMinus.mp3", "24928", "27973", "Hebrew"], [14, "numbersAll_noMinus.mp3", "27973", "29918", "Hebrew"], [15, "numbersAll_noMinus.mp3", "29918", "32791", "Hebrew"], [16, "numbersAll_noMinus.mp3", 33691, "36056", "Hebrew"], [17, "numbersAll_noMinus.mp3", "36056", "38857", "Hebrew"], [18, "numbersAll_noMinus.mp3", "38857", "41636", "Hebrew"], [19, "numbersAll_noMinus.mp3", "41636", "43962", "Hebrew"], [20, "numbersAll_noMinus.mp3", "43962", "46680", "Hebrew"], [21, "numbersAll_noMinus.mp3", 47880, "50260", "Hebrew"], [22, "numbersAll_noMinus.mp3", "50260", "53548", "Hebrew"], [23, "numbersAll_noMinus.mp3", "53548", "56500", "Hebrew"], [24, "numbersAll_noMinus.mp3", "56500", "59439", "Hebrew"], [25, "numbersAll_noMinus.mp3", "59439", "61741", "Hebrew"], [26, "numbersAll_noMinus.mp3", "61741", "63843", "Hebrew"], [27, "numbersAll_noMinus.mp3", "63843", "65731", "Hebrew"], [28, "numbersAll_noMinus.mp3", "65731", "67592", "Hebrew"], [29, "numbersAll_noMinus.mp3", "67592", "69526", "Hebrew"], [30, "numbersAll_noMinus.mp3", "69526", "71215", "Hebrew"], [31, "numbersAll_noMinus.mp3", "71215", 72787, "Hebrew"], [32, "numbersAll_noMinus.mp3", 72887, "74253", "Hebrew"], [33, "numbersAll_noMinus.mp3", "74253", "75732", "Hebrew"], [34, "numbersAll_noMinus.mp3", "75732", 77591, "Hebrew"], [35, "numbersAll_noMinus.mp3", "77791", "79329", "Hebrew"], [36, "numbersAll_noMinus.mp3", "79329", "81232", "Hebrew"], [37, "numbersAll_noMinus.mp3", "81232", "83044", "Hebrew"], [38, "numbersAll_noMinus.mp3", "83044", "85177", "Hebrew"], [39, "numbersAll_noMinus.mp3", "85177", "86766", "Hebrew"], [40, "numbersAll_noMinus.mp3", "86766", "88373", "Hebrew"]]
 
   function playNumberAudio(number, callback) {
     const audio = new Audio(allNumbersAudio)
@@ -307,6 +285,15 @@
   function finished() {
 
   }
+
+  function playScoreAudio(callback) {
+    const score = parseInt(document.getElementById('score').innerHTML)
+    playAudio(globalAudioFileLocation, score, scores)
+    if(typeof callback === 'function'){
+      callback()
+    }
+  }
+
   /**
   called on correct word drop
   */
@@ -320,8 +307,10 @@
   */
   function playIncorrectAudio() {
     const randomId = getRandomElement(incorrectAudio)[0]
-    playAudio(globalAudioFileLocation, randomId, incorrectAudio)
+    playAudio(globalAudioFileLocation, randomId, incorrectAudio, playScoreAudio)
   }
+
+
 
   function playAudio(location, id, sourceArray, callback) {
     var trackInfo = {}
@@ -396,7 +385,10 @@
         removeElementById(id, remainingWords)
         updateScore('increment')
         function success() {
-          playSuccessAudio(playCompleteAudio)
+          function callback(){
+            playScoreAudio(playCompleteAudio)
+          }
+          playSuccessAudio(callback)
         }
         playAudio(audioLocation, id, audioInfo, success)
       },
